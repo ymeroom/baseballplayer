@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legends of the Diamond</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Special+Elite&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #f5ead6;
+      --parch:   #e8d5b0;
+      --brown:   #3b2410;
+      --darkred: #7a1c1c;
+      --gold:    #c9922a;
+      --sepia:   #8b6340;
+      --ink:     #1a0f00;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: var(--ink);
+      color: var(--cream);
+      min-height: 100vh;
+      /* aged paper noise */
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+
+    /* ══════════ HERO ══════════ */
+    .hero {
+      position: relative;
+      background: linear-gradient(180deg, #0d0500 0%, #1a0a00 60%, #0d0500 100%);
+      border-bottom: 3px solid var(--gold);
+      overflow: hidden;
+      padding: 5rem 1rem 4rem;
+      text-align: center;
+    }
+
+    /* stadium arc */
+    .hero::before {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 50%;
+      transform: translateX(-50%);
+      width: 140%;
+      height: 260px;
+      background: radial-gradient(ellipse 70% 100% at 50% 100%, #1a3d0a 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* spotlight */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,146,42,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.8rem;
+      letter-spacing: 0.35em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      font-weight: 900;
+      line-height: 0.9;
+      color: var(--cream);
+      text-shadow: 0 4px 30px rgba(201,146,42,0.25), 2px 2px 0 var(--darkred);
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      margin-top: 1.2rem;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      color: var(--sepia);
+    }
+
+    .hero-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem auto;
+      max-width: 400px;
+    }
+    .hero-divider span { font-size: 1.4rem; }
+    .hero-divider::before, .hero-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+    .hero-divider::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+    /* ══════════ SECTION ══════════ */
+    .section {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 4rem 1.4rem;
+    }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .section-head h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--cream);
+    }
+    .section-head h2 span { color: var(--gold); }
+    .section-head p {
+      margin-top: 0.5rem;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.82rem;
+      letter-spacing: 0.15em;
+      color: var(--sepia);
+      text-transform: uppercase;
+    }
+
+    /* ornament */
+    .ornament {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.8rem; margin: 1rem 0;
+    }
+    .ornament::before, .ornament::after {
+      content: ''; flex: 1; max-width: 120px;
+      height: 1px; background: var(--gold); opacity: 0.5;
+    }
+    .ornament-icon { color: var(--gold); font-size: 1rem; }
+
+    /* ══════════ PLAYER CARDS ══════════ */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .pcard {
+      background: linear-gradient(160deg, #1e0f02 0%, #140900 100%);
+      border: 1px solid var(--sepia);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .pcard:hover {
+      transform: translateY(-6px) rotate(-0.5deg);
+      box-shadow: 0 20px 60px rgba(201,146,42,0.2);
+    }
+
+    /* top colour stripe per position */
+    .pcard::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+    }
+    .pcard.p-pitcher::before  { background: linear-gradient(90deg, #7a1c1c, #c9922a); }
+    .pcard.p-hitter::before   { background: linear-gradient(90deg, #1c4a7a, #2a8bc9); }
+    .pcard.p-allround::before { background: linear-gradient(90deg, #1a5c32, #c9922a); }
+
+    /* corner rosettes */
+    .pcard::after {
+      content: '✦';
+      position: absolute;
+      top: 12px; right: 12px;
+      color: var(--gold);
+      font-size: 0.7rem;
+      opacity: 0.5;
+    }
+
+    .pcard-number {
+      position: absolute;
+      top: 16px; left: 16px;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: rgba(201,146,42,0.12);
+      line-height: 1;
+      user-select: none;
+    }
+
+    .pcard-body { padding: 2rem 1.4rem 1.4rem; }
+
+    .pcard-era {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .pcard-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.1;
+      margin: 0.4rem 0 0.2rem;
+    }
+    .pcard-name-en {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.75rem;
+      color: var(--sepia);
+      letter-spacing: 0.1em;
+    }
+
+    .pcard-divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin: 0.9rem 0;
+      opacity: 0.4;
+    }
+
+    .pcard-desc {
+      font-size: 0.85rem;
+      line-height: 1.75;
+      color: #c8b89a;
+    }
+
+    .pcard-stats {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+    }
+    .stat-lbl {
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: var(--sepia);
+      text-transform: uppercase;
+    }
+
+    .pcard-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.2rem 0.7rem;
+      border: 1px solid var(--gold);
+      border-radius: 2px;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-family: 'Special Elite', cursive;
+    }
+
+    /* ══════════ QUOTE BAND ══════════ */
+    .quote-band {
+      background: var(--darkred);
+      border-top: 2px solid var(--gold);
+      border-bottom: 2px solid var(--gold);
+      padding: 3.5rem 1.4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .quote-band::before {
+      content: '"';
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: 20rem;
+      color: rgba(0,0,0,0.2);
+      top: -4rem; left: 1rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .quote-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-style: italic;
+      color: var(--cream);
+      max-width: 700px;
+      margin: 0 auto 1rem;
+      line-height: 1.6;
+      position: relative;
+    }
+    .quote-attr {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+    }
+
+    /* ══════════ TAIWAN WALL ══════════ */
+    .tw-wall {
+      background: linear-gradient(180deg, #0d0500 0%, #0a0800 100%);
+      padding: 4rem 1.4rem;
+    }
+
+    .timeline {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      padding-left: 2.5rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.6rem; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--gold), transparent);
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 2.2rem;
+    }
+    .tl-item::before {
+      content: '⚾';
+      position: absolute;
+      left: -2.5rem;
+      top: 0.1rem;
+      font-size: 0.85rem;
+      background: var(--ink);
+      padding: 2px;
+    }
+
+    .tl-year {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      margin-bottom: 0.2rem;
+    }
+    .tl-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--cream);
+    }
+    .tl-desc {
+      font-size: 0.82rem;
+      color: #a08060;
+      margin-top: 0.2rem;
+      line-height: 1.6;
+    }
+
+    /* ══════════ FOOTER ══════════ */
+    footer {
+      background: #080400;
+      border-top: 2px solid #2a1a08;
+      padding: 2rem 1.4rem;
+      text-align: center;
+    }
+    .footer-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    footer p {
+      font-size: 0.72rem;
+      color: var(--sepia);
+      letter-spacing: 0.1em;
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    /* ══════════ TICKER ══════════ */
+    .ticker-wrap {
+      background: var(--darkred);
+      padding: 0.5rem 0;
+      overflow: hidden;
+      border-bottom: 2px solid var(--gold);
+      white-space: nowrap;
+    }
+    .ticker {
+      display: inline-block;
+      animation: ticker 28s linear infinite;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      color: var(--cream);
+    }
+    @keyframes ticker {
+      from { transform: translateX(100vw); }
+      to   { transform: translateX(-100%); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Ticker -->
+<div class="ticker-wrap">
+  <span class="ticker">
+    ⚾ LEGENDS OF THE DIAMOND &nbsp;·&nbsp; 台灣棒球傳奇殿堂 &nbsp;·&nbsp;
+    郭泰源 · 王建民 · 陳偉殷 · 曹錦輝 · 胡金龍 · 林子偉 &nbsp;·&nbsp;
+    2026 MLB 台灣之戰：鄧愷威 × 李灝宇 &nbsp;·&nbsp; HISTORY IS WRITTEN PITCH BY PITCH &nbsp;·&nbsp;
+  </span>
+</div>
+
+<!-- Hero -->
+<header class="hero">
+  <p class="hero-eyebrow">⚾ &nbsp; Hall of Legends &nbsp; · &nbsp; 傳奇殿堂 &nbsp; ⚾</p>
+  <h1 class="hero-title">LEGENDS<br><em>of the</em><br>DIAMOND</h1>
+  <p class="hero-sub">台灣棒球傳奇 · MLB · Since 1959</p>
+  <div class="hero-divider"><span>✦</span></div>
+  <p style="font-family:'Special Elite',cursive;font-size:0.82rem;color:#a08060;letter-spacing:0.12em;">
+    FROM TAIWAN TO THE MAJORS — THE STORIES THAT DEFINE AN ERA
+  </p>
+</header>
+
+<!-- Player Cards -->
+<section class="section">
+  <div class="section-head">
+    <h2>THE <span>IMMORTALS</span></h2>
+    <div class="ornament"><span class="ornament-icon">✦</span></div>
+    <p>台灣旅美棒球傳奇人物</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- 郭泰源 -->
+    <div class="pcard p-pitcher">
+      <div class="pcard-number">21</div>
+      <div class="pcard-body">
+        <p class="pcard-era">1985 – 1999 · Pitcher</p>
+        <h3 class="pcard-name">郭泰源</h3>
+        <p class="pcard-name-en">Kuo Tai-yuan · "The Oriental Express"</p>
+        <div class="pcard-divider"></div>
+        <p class="pcard-desc">
+          台灣史上首位在日本職棒一軍站穩的先發投手，以電光石火的快速球震懾整個日職聯盟。
+          他的名字是一整個世代台灣棒球夢的起點，也是「台灣人能打職業棒球」這件事的第一個有力證明。
+        </p>
+        <div class="pcard-stats">
+          <div class="stat">
+            <span class="stat-val">11</span>
+            <span class="stat-lbl">賽季</span>
+          </div>
+          <div class="stat">
+            <span class="stat-val">99</span>
+            <span class="stat-lbl">mph 快速球</span>
+          </div>
+        </div>
+        <span class="pcard-tag">先驅者</span>
+      </div>
+    </div>
+
+    <!-- 王建民 -->
+    <div class="pcard p-pitcher">
+      <div class="pcard-number">40</div>
+      <div class="pcard-body">
+        <p class="pcard-era">2005 – 2014 · Pitcher · New York Yankees</p>
+        <h3 class="pcard-name">王建民</h3>
+        <p class="pcard-name-en">Chien-Ming Wang · "The Sinker King"</p>
+        <div class="pcard-divider"></div>
+        <p class="pcard-desc">
+          連續兩年 19 勝的大聯盟先發王牌，洋基先發輪值的鋼鐵支柱。
+          他的下沉球讓全聯盟打者繳出一個又一個滾地球出局，
+          也讓台灣整個世代的人在凌晨守著電視等他出賽。
+        </p>
+        <div class="pcard-stats">
+          <div class="stat">
+            <span class="stat-val">19</span>
+            <span class="stat-lbl">勝（連兩年）</span>
+          </div>
+          <div class="stat">
+            <span class="stat-val">2.30</span>
+            <span class="stat-lbl">ERA 生涯最佳</span>
+          </div>
+        </div>
+        <span class="pcard-tag">洋基傳奇</span>
+      </div>
+    </div>
+
+    <!-- 陳偉殷 -->
+    <div class="pcard p-pitcher">
+      <div class="pcard-number">16</div>
+      <div class="pcard-body">
+        <p class="pcard-era">2012 – 2019 · Pitcher · Baltimore / Miami</p>
+        <h3 class="pcard-name">陳偉殷</h3>
+        <p class="pcard-name-en">Wei-Yin Chen · "The Southpaw Ace"</p>
+        <div class="pcard-divider"></div>
+        <p class="pcard-desc">
+          台灣最成功的左投先發，從日本職棒 NPB 到大聯盟皆繳出頂尖成績。
+          以精準控球和多樣球路為武器，簽下 8000 萬美元合約，
+          是台灣投手在大聯盟商業價值的最高峰。
+        </p>
+        <div class="pcard-stats">
+          <div class="stat">
+            <span class="stat-val">$80M</span>
+            <span class="stat-lbl">合約</span>
+          </div>
+          <div class="stat">
+            <span class="stat-val">8</span>
+            <span class="stat-lbl">MLB 賽季</span>
+          </div>
+        </div>
+        <span class="pcard-tag">左手王牌</span>
+      </div>
+    </div>
+
+    <!-- 鄧愷威 -->
+    <div class="pcard p-pitcher">
+      <div class="pcard-number">57</div>
+      <div class="pcard-body">
+        <p class="pcard-era">2026 – · Pitcher · Houston Astros</p>
+        <h3 class="pcard-name">鄧愷威</h3>
+        <p class="pcard-name-en">Kai-Wei Teng · "The Sweeper"</p>
+        <div class="pcard-divider"></div>
+        <p class="pcard-desc">
+          以致命橫掃球（sweeper）穩住太空人輪值，2026 球季防禦率 3.71。
+          6 月 16 日寫下歷史——大聯盟史上首位對上台灣打者的台灣投手，
+          第二局三振李灝宇，一球，兩個台灣名字，永久刻進紀錄簿。
+        </p>
+        <div class="pcard-stats">
+          <div class="stat">
+            <span class="stat-val">3.71</span>
+            <span class="stat-lbl">ERA 2026</span>
+          </div>
+          <div class="stat">
+            <span class="stat-val">49</span>
+            <span class="stat-lbl">三振 / 51 局</span>
+          </div>
+        </div>
+        <span class="pcard-tag">歷史製造者</span>
+      </div>
+    </div>
+
+    <!-- 李灝宇 -->
+    <div class="pcard p-hitter">
+      <div class="pcard-number">27</div>
+      <div class="pcard-body">
+        <p class="pcard-era">2026 – · Infielder · Detroit Tigers</p>
+        <h3 class="pcard-name">李灝宇</h3>
+        <p class="pcard-name-en">Hao-Yu Lee · "The Power Compact"</p>
+        <div class="pcard-divider"></div>
+        <p class="pcard-desc">
+          175 公分卻有著怪物等級的擊球初速，台灣第 19 位登上大聯盟的球員。
+          首轟擊球初速 105.8 英里，以力量打破球探對亞洲內野手的刻板印象。
+          6 月 16 日以代打身分面對鄧愷威，寫下「台灣對決」的對打方。
+        </p>
+        <div class="pcard-stats">
+          <div class="stat">
+            <span class="stat-val">105.8</span>
+            <span class="stat-lbl">mph 首轟初速</span>
+          </div>
+          <div class="stat">
+            <span class="stat-val">#19</span>
+            <span class="stat-lbl">台灣 MLB 球員</span>
+          </div>
+        </div>
+        <span class="pcard-tag">怪力新星</span>
+      </div>
+    </div>
+
+    <!-- 曹錦輝 -->
+    <div class="pcard p-allround">
+      <div class="pcard-number">32</div>
+      <div class="pcard-body">
+        <p class="pcard-era">2003 – 2009 · Pitcher · Colorado Rockies</p>
+        <h3 class="pcard-name">曹錦輝</h3>
+        <p class="pcard-name-en">Chin-Hui Tsao · "The Rocket"</p>
+        <div class="pcard-divider"></div>
+        <p class="pcard-desc">
+          台灣第一位被選進大聯盟選秀的先發投手，由科羅拉多落磯以第一輪第三順位欽點，
+          快速球一度逼近 100 英里，是當時最被看好的台灣旅美投手，
+          也是後繼者踏進大聯盟之前，所有人心中的那塊里程碑。
+        </p>
+        <div class="pcard-stats">
+          <div class="stat">
+            <span class="stat-val">#3</span>
+            <span class="stat-lbl">選秀順位</span>
+          </div>
+          <div class="stat">
+            <span class="stat-val">100</span>
+            <span class="stat-lbl">mph 球速</span>
+          </div>
+        </div>
+        <span class="pcard-tag">選秀傳奇</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Quote -->
+<div class="quote-band">
+  <p class="quote-text">
+    「棒球場上沒有國界，但每一次台灣人站上投手丘或打擊區，我們都看見了一個島嶼的驕傲。」
+  </p>
+  <p class="quote-attr">— LEGENDS OF THE DIAMOND</p>
+</div>
+
+<!-- Taiwan Timeline -->
+<section class="tw-wall">
+  <div class="section" style="padding-top:0">
+    <div class="section-head">
+      <h2>TAIWAN IN <span>THE MAJORS</span></h2>
+      <div class="ornament"><span class="ornament-icon">✦</span></div>
+      <p>台灣旅美大事紀</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <p class="tl-year">1959</p>
+        <p class="tl-name">台灣棒球首登國際舞台</p>
+        <p class="tl-desc">七虎少棒隊以亞洲代表身分出征，開啟台灣棒球的國際想像。</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">1985</p>
+        <p class="tl-name">郭泰源赴日</p>
+        <p class="tl-desc">加盟西武獅，成為台灣投手踏上職業殿堂的第一座燈塔。</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2003</p>
+        <p class="tl-name">曹錦輝叩關 MLB</p>
+        <p class="tl-desc">台灣首位被大聯盟第一輪選中的投手，科羅拉多落磯欽點，全台灣屏息以待。</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2005 – 2007</p>
+        <p class="tl-name">王建民稱霸洋基先發</p>
+        <p class="tl-desc">連續兩年 19 勝，成為紐約洋基最可靠的先發投手，台灣棒球的黃金年代。</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2016</p>
+        <p class="tl-name">陳偉殷簽下 8000 萬合約</p>
+        <p class="tl-desc">台灣投手在大聯盟的商業價值達到歷史高峰，邁阿密馬林魚傾力延攬。</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2026 · 6/16</p>
+        <p class="tl-name">鄧愷威三振李灝宇 ── 台灣對決</p>
+        <p class="tl-desc">大聯盟史上首次台灣投手對上台灣打者，第二局，一顆球，兩個台灣人，永恆的歷史瞬間。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p class="footer-title">Legends of the Diamond</p>
+  <p>⚾ &nbsp; <a href="https://github.com/ymeroom/baseballplayer" target="_blank">github.com/ymeroom/baseballplayer</a> &nbsp; · &nbsp; 2026</p>
+</footer>
+
+</body>
+</html>
